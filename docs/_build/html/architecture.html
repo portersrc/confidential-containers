@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Confidential Computing Overview &#8212; Confidential Containers  documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=4f649999" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=039e1c02" />
+    <script src="_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="_static/doctools.js?v=888ff710"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Confidential Containers Roadmap" href="roadmap.html" />
+    <link rel="prev" title="Confidential Containers" href="overview.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="confidential-computing-overview">
+<h1>Confidential Computing Overview<a class="headerlink" href="#confidential-computing-overview" title="Link to this heading">¶</a></h1>
+<blockquote>
+<div><p>Confidential Computing protects data in use by performing computation in a
+hardware-based Trusted Execution Environment.
+These secure and isolated environments prevent unauthorized access or
+modification of applications and data while they are in use, thereby increasing
+the security level of organizations that manage sensitive and regulated data.</p>
+<p>A Trusted Execution Environment (TEE) is commonly defined as an environment that
+provides a level of assurance of data integrity, data confidentiality, and code
+integrity. A hardware-based TEE uses hardware-backed techniques to provide
+increased security guarantees for the execution of code and protection of data
+within that environment.</p>
+</div></blockquote>
+<p>Key Characteristics of Confidential Computing, as defined by the
+<a class="reference external" href="https://confidentialcomputing.io/wp-content/uploads/sites/85/2021/03/confidentialcomputing_outreach_whitepaper-8-5x11-1.pdf">Confidential Computing Consortium</a>:</p>
+<ul class="simple">
+<li><p><strong>Data confidentiality:</strong> Unauthorized entities cannot view data while it is
+in use within the TEE</p></li>
+<li><p><strong>Data integrity:</strong> Unauthorized entities cannot add, remove, or alter data
+while it is in use within the TEE</p></li>
+<li><p><strong>Code integrity:</strong> Unauthorized entities cannot add, remove, or alter code
+executing in the TEE</p></li>
+</ul>
+</section>
+<section id="confidential-computing-building-blocks">
+<h1>Confidential Computing Building Blocks<a class="headerlink" href="#confidential-computing-building-blocks" title="Link to this heading">¶</a></h1>
+<section id="key-components">
+<h2>Key Components<a class="headerlink" href="#key-components" title="Link to this heading">¶</a></h2>
+<p>The following diagram shows how the different building blocks for Confidential
+Computing (CC) come together:</p>
+<p><img alt="CC_all_blocks" src="_images/CC_all_blocks.jpg" /></p>
+<p>Let’s start by describing the lower level blocks of the CC solution
+(<strong>colored blue</strong>):</p>
+<ul class="simple">
+<li><p><strong>Infra layer</strong> - be it on-premises (bare metal, VMware etc.) or public clouds
+(AWS, Azure, GCP, etc.)</p>
+<ul>
+<li><p><strong>Hardware with CC support</strong> - this includes 2 distinct models:</p>
+<ul>
+<li><p><strong>VM-based TEEs</strong>  - In this model, memory is encrypted along a
+traditional VM boundary running on top of a VMM. AMD SEV-SNP, Intel TDX,
+IBM Secure Execution and Protected Execution Functionality (PEF) are
+examples of VM-based TEEs.</p></li>
+<li><p><strong>Process-based TEEs</strong> - In this model, a process that needs to run
+securely is divided into two components: trusted and untrusted.
+The trusted component resides in encrypted memory and handles confidential
+computing, while the untrusted component interfaces with the operating
+system and propagates I/O from encrypted memory to the rest of the system.
+Intel SGX is an example of a process-based TEE.</p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><strong>Hypervisor</strong> - this includes hypervisors such as QEMU/KVM, cloud hypervisor,
+public cloud provider hypervisors etc…</p></li>
+</ul>
+<p>The <strong>Confidential Computing services block</strong> contains a number of services
+(<strong>colored pink</strong>) which are required for creating a holistic CC platform which
+the customer can then use to build their solution. This currently includes the
+following services:</p>
+<ul class="simple">
+<li><p><strong>Attestation service</strong> -  The primary purpose of the attestation service is
+to validate the evidence provided by the hardware TEE. This is the <em>Verifier</em>,
+as defined in the <a class="reference external" href="https://www.rfc-editor.org/rfc/rfc9334">RATS architecture</a>.</p></li>
+<li><p><strong>Key Broker Service (KBS)</strong> -  The KBS is the <em>Relying Party</em>, as defined by
+the <a class="reference external" href="https://www.rfc-editor.org/rfc/rfc9334">RATS architecture</a>.
+Following are its primary functions:</p>
+<ul>
+<li><p>Receive evidence from the <em>Attester</em> (confidential VM or container) via a
+challenge-response protocol.</p></li>
+<li><p>Relay the evidence to the Attestation Service for verification.</p></li>
+<li><p>Apply appraisal policy for the returned Attestation Results to assess the
+trustworthiness of the <em>Attester</em>.</p></li>
+<li><p>Interact with the Key Management Service to retrieve the keys and then
+send them back to the <em>Attester</em>.</p></li>
+</ul>
+</li>
+<li><p><strong>Key management service</strong> - A service for securely storing, managing and
+backing up of cryptographic keys used by applications and users.</p></li>
+<li><p><strong>Image build service</strong> - Services used to build confidential containers or VM
+images for end users.</p></li>
+<li><p><strong>Image registry</strong> - A service that is used to store encrypted and/or signed
+container and VM images required for CC workloads. Examples of such registries
+include <a class="reference external" href="https://quay.io/">Quay.io</a>, <a class="reference external" href="https://hub.docker.com/">Docker Hub</a>,
+CSPs provided registries, etc.</p></li>
+</ul>
+<p>Both the <strong>Confidential VM</strong> and the <strong>Confidential Containers</strong> block contain
+the <strong>Enclave Software Stack</strong>. This stack is made of the trusted CC components
+responsible for collectively running the whole attestation flows, and for
+example:</p>
+<ul class="simple">
+<li><p>Unblocking a confidential VM boot process after injecting a guest owned secret
+released by the relying party.</p></li>
+<li><p>Decrypting and unpacking a protected container image, and running its
+associated  workload.</p></li>
+</ul>
+</section>
+<section id="confidential-container-stack">
+<h2>Confidential Container Stack<a class="headerlink" href="#confidential-container-stack" title="Link to this heading">¶</a></h2>
+<p>The CC components can be arranged together and configured to provide
+containerized workloads with the Confidential Computing security guarantees.</p>
+<p>The two following sections describe a generic software architecture for
+Kubernetes pods to run in either VM-based or process-based TEEs.</p>
+<p>Although internal implementations for the two approaches differ, they share the
+same goals and attributes:</p>
+<ul class="simple">
+<li><p>Remove cloud and infrastructure providers from the guest application Trusted
+Computing Base (TCB).</p></li>
+<li><p>Integrate natively with the Kubernetes control plane.</p></li>
+<li><p>Provide an unmodified Kubernetes user and developer experience.</p></li>
+<li><p>Deploy unmodified workloads.</p></li>
+</ul>
+<section id="vm-based-tee">
+<h3>VM-based TEE<a class="headerlink" href="#vm-based-tee" title="Link to this heading">¶</a></h3>
+<p>VM-based TEEs (e.g. AMD SEV, IBM SE or Intel TDX) can be used to build a
+confidential containers software architecture:</p>
+<p><img alt="CC_TEE_container" src="_images/CC_TEE_container.png" /></p>
+<p>Following is the workflow when deploying a Kubernetes pod with VM-based TEEs:</p>
+<ul class="simple">
+<li><p>CC workload preparation</p>
+<ul>
+<li><p>User builds the container image(s) (e.g. with tools like <code class="docutils literal notranslate"><span class="pre">podman</span></code>).</p></li>
+<li><p>User signs/encrypts the container image(s).</p></li>
+<li><p>User pushes the container image(s) to the image registry.</p></li>
+</ul>
+</li>
+<li><p>Deploying the CC workload in k8s</p>
+<ul>
+<li><p>User deploys the workload (<code class="docutils literal notranslate"><span class="pre">kubectl</span> <span class="pre">apply</span> <span class="pre">-f</span> <span class="pre">cc_workload.yaml</span></code>).</p></li>
+<li><p>Kubernetes schedules the workload to target host having the required
+capability to run confidential containers.</p></li>
+</ul>
+</li>
+<li><p>CC workload execution flow (<strong>red connector</strong> in the diagram)</p>
+<ul>
+<li><p>Confidential containers runtime on the host starts the VM TEE (The enclave).</p></li>
+<li><p>Enclave (agent) performs remote attestation: <strong>steps 1-2 in the diagram</strong>.</p></li>
+<li><p>Enclave (agent) gets the keys required to verify/decrypt the containers
+image(s):  <strong>steps 3-4 in the diagram</strong>.</p></li>
+<li><p>Enclave (image management) downloads the container image(s) : <strong>step 5 in
+the diagram</strong>.</p></li>
+<li><p>Enclave verifies/decrypts the container image(s) : <strong>step 6 in the diagram</strong>.</p></li>
+<li><p>Enclave starts the container workload.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="process-based-tee">
+<h3>Process-based TEE<a class="headerlink" href="#process-based-tee" title="Link to this heading">¶</a></h3>
+<p>The confidential containers software architecture can also be built on top of
+process-based TEEs like e.g. Intel SGX:</p>
+<p><img alt="CC_SGX_container" src="_images/CC_SGX_container.png" /></p>
+<p>Following is the workflow when deploying a Kubernetes pod with a process-based
+TEEs. The main differences from the VM-based TEE approach are the last 3 steps
+involving interaction between 2 enclave processes:</p>
+<ul class="simple">
+<li><p>CC workload preparation</p>
+<ul>
+<li><p>User builds the container image(s) (e.g. with tools like <code class="docutils literal notranslate"><span class="pre">podman</span></code>).</p></li>
+<li><p>User signs/encrypts the container image(s).</p></li>
+<li><p>User pushes the container image(s) to the image registry.</p></li>
+</ul>
+</li>
+<li><p>Deploying the CC workload in k8s</p>
+<ul>
+<li><p>User deploys the workload (<code class="docutils literal notranslate"><span class="pre">kubectl</span> <span class="pre">apply</span> <span class="pre">-f</span> <span class="pre">cc_workload.yaml</span></code>).</p></li>
+<li><p>Kubernetes schedules the workload to target host having the required
+capability to run confidential containers.</p></li>
+</ul>
+</li>
+<li><p>CC workload execution flow (<strong>red connector</strong> in the diagram)</p>
+<ul>
+<li><p>Confidential containers runtime on the host starts the enclave agent.</p></li>
+<li><p>Enclave (agent) performs remote attestation: <strong>steps 1-2 in the diagram</strong>.</p></li>
+<li><p>Enclave (agent) gets the keys required to verify/decrypt the containers
+image(s): <strong>steps 3-4 in the diagram</strong>.</p></li>
+<li><p>Enclave (image management) downloads the container image(s) : <strong>step 5 in
+the diagram</strong>.</p></li>
+<li><p>Enclave verifies, decrypts and writes the container image(s) to a local
+encrypted filesystem: <strong>step 6 in the diagram</strong>.</p></li>
+<li><p>The runtime starts the app enclave which reads the container bundle from the
+encrypted filesystem.</p></li>
+<li><p>Secure use of the encrypted filesystem is facilitated by a key exchange
+between the agent and app enclaves using either sealing or local attestation.</p></li>
+</ul>
+</li>
+</ul>
+<p>As can be seen, the flows for process and VM-based TEEs are almost identical. It
+should be noted that process-based TEE requires a few additional software
+components like <code class="docutils literal notranslate"><span class="pre">libOS</span></code> without which the application requires re-architecting.
+This is not the case for VM-based TEEs. Conversely, Process based TEEs do not
+require a separate VM and CC-aware hypervisor.</p>
+<p>The up-to-date design for the Confidential Containers process-based architecture
+is maintained in the <a class="reference external" href="https://github.com/confidential-containers/enclave-cc/blob/main/docs/design.md">enclave-cc documentation</a>.</p>
+</section>
+</section>
+</section>
+<section id="cncf-confidential-containers">
+<h1>CNCF Confidential Containers<a class="headerlink" href="#cncf-confidential-containers" title="Link to this heading">¶</a></h1>
+<p>The CNCF Confidential Containers project is an implementation of the
+confidential containers architecture described in the previous section.</p>
+<p>It relies on several major cloud native components like <code class="docutils literal notranslate"><span class="pre">containerd</span></code>, both the
+<code class="docutils literal notranslate"><span class="pre">Kata</span> <span class="pre">Containers</span></code> and the <code class="docutils literal notranslate"><span class="pre">enclave-cc</span></code> runtimes, or the <code class="docutils literal notranslate"><span class="pre">ocicrypt</span></code> container
+image encryption APIs.
+It also depends on the standard Linux virtualization stack, including the <code class="docutils literal notranslate"><span class="pre">KVM</span></code>
+hypervisor and open source VMMs like <code class="docutils literal notranslate"><span class="pre">QEMU</span></code> or <code class="docutils literal notranslate"><span class="pre">cloud-hypervisor</span></code>.</p>
+<p>The project supports both VM-based and process-based TEEs, with the key
+objective to reuse the generic components around enclave agent and attestation
+services across both TEE models.</p>
+<p>It is a <a class="reference external" href="https://www.cncf.io/projects/confidential-containers/">Cloud Native Computing Foundation Sandbox</a>
+project.</p>
+<p>The following diagram shows the upcoming v1 architecture to run Confidential
+Containers using VM-based TEEs and the Kata Containers runtime:</p>
+<p><img alt="COCO_ccv1_TEE" src="_images/COCO_ccv1_TEE.png" /></p>
+<p>The following diagram shows the upcoming v1 architecture to run Confidential
+Containers using VM-based TEEs by leveraging the peer-pods approach. This relies on Kata Containers remote hypervisor support and the <a class="reference external" href="https://github.com/confidential-containers/cloud-api-adaptor/">cloud-api-adaptor</a> project:</p>
+<p><img alt="COCO_ccv1_TEE" src="_images/COCO_ccv1_peerpods_TEE.png" /></p>
+<p>The following diagram shows the upcoming v1 architecture to run Confidential
+Containers using the Intel SGX process-based TEE. It relies on the
+<a class="reference external" href="https://github.com/confidential-containers/enclave-cc">enclave-cc</a> project:</p>
+<p><img alt="COCO_ccv1_enclave" src="_images/COCO_ccv1_enclave.png" /></p>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Confidential Containers</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html#installation">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html#running-a-workload">Running a workload</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Overview</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Confidential Computing Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#confidential-computing-building-blocks">Confidential Computing Building Blocks</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#key-components">Key Components</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#confidential-container-stack">Confidential Container Stack</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="#cncf-confidential-containers">CNCF Confidential Containers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="roadmap.html">Confidential Containers Roadmap</a></li>
+<li class="toctree-l1"><a class="reference internal" href="roadmap.html#short-term-roadmap">Short-Term Roadmap</a></li>
+<li class="toctree-l1"><a class="reference internal" href="roadmap.html#mid-term-roadmap">Mid-Term Roadmap</a></li>
+<li class="toctree-l1"><a class="reference internal" href="roadmap.html#longer-term-roadmap">Longer-Term Roadmap</a></li>
+<li class="toctree-l1"><a class="reference internal" href="alignment.html">Alignment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="CODE_OF_CONDUCT.html">Code of Conduct</a></li>
+<li class="toctree-l1"><a class="reference internal" href="CONTRIBUTING.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="guides/index.html">Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="releases/index.html">Release Notes</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="overview.html" title="previous chapter">Confidential Containers</a></li>
+      <li>Next: <a href="roadmap.html" title="next chapter">Confidential Containers Roadmap</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2023, confidential-containers-authors.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 7.2.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      
+      |
+      <a href="_sources/architecture.md.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

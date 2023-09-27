@@ -12,9 +12,9 @@ In general, using CoCo involves the following steps:
 
 This guide walks through these steps and touches on some platform-specific configurations.
 For more advanced features, specific hardware setup, and troubleshooting information,
-see the [guides](./guides) directory.
+see the [guides](./guides/index.rst) directory.
 
-Confidential Containers is still maturing. See [release notes](./releases) for currrent
+Confidential Containers is still maturing. See [release notes](./releases/index.rst) for currrent
 hardware support and limitations.
 
 # Installation
@@ -166,7 +166,7 @@ enclave-cc      enclave-cc      9m55s
 While the operator deploys all the required binaries and artifacts and sets up runtime classes that use them,
 certain platforms may require additional configuration to enable confidential computing. For example, the host
 kernel and firmware might need to be configured.
-See the [guides](./guides) for more information.
+See the [guides](./guides/index.rst) for more information.
 
 # Running a workload
 
@@ -193,7 +193,7 @@ spec:
 ```
 
 Setting the runtimeClassName is usually the only change needed to the pod yaml, but some platforms
-support additional annotations for configuring the enclave. See the [guides](./guides) for
+support additional annotations for configuring the enclave. See the [guides](./guides/index.rst) for
 more details.
 
 With Confidential Containers, the workload container images are never downloaded on the host.

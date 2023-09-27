@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Release Notes for v0.6.0 &#8212; Confidential Containers  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=4f649999" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=039e1c02" />
+    <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Release Notes for v0.5.0" href="v0.5.0.html" />
+    <link rel="prev" title="Release Notes for v0.7.0" href="v0.7.0.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="release-notes-for-v0-6-0">
+<h1>Release Notes for v0.6.0<a class="headerlink" href="#release-notes-for-v0-6-0" title="Link to this heading">¶</a></h1>
+<p>Release Date: June 7th, 2023</p>
+<p>Please see the <a class="reference internal" href="../quickstart.html"><span class="std std-doc">quickstart guide</span></a> for details on how to try out Confidential
+Containers.</p>
+<p>Please refer to our <a class="reference external" href="https://github.com/confidential-containers/documentation/wiki/Acronyms">Acronyms</a>
+and <a class="reference external" href="https://github.com/confidential-containers/documentation/wiki/Glossary">Glossary</a> pages for a
+definition of the acronyms used in this document.</p>
+<section id="what-s-new">
+<h2>What’s new<a class="headerlink" href="#what-s-new" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>Support for attesting pod VMs with Azure vTPMs on SEV-SNP</p></li>
+<li><p>Support for using Project Amber as an attestation service</p></li>
+<li><p>Support for Cosign signature validation with s390x</p></li>
+<li><p>Pulling guest images with many layers can no longer cause guest CPU starvation.</p></li>
+<li><p>Attestation Service upgraded to avoid several security issues in Go packages.</p></li>
+<li><p>CC-KBC &amp; KBS support with SGX attester/verifier for Occlum and CI for enclave-cc</p></li>
+</ul>
+</section>
+<section id="hardware-support">
+<h2>Hardware Support<a class="headerlink" href="#hardware-support" title="Link to this heading">¶</a></h2>
+<p>Confidential Containers is tested with attestation on the following platforms:</p>
+<ul class="simple">
+<li><p>Intel TDX</p></li>
+<li><p>AMD SEV(-ES)</p></li>
+<li><p>Intel SGX</p></li>
+</ul>
+<p>The following platforms are untested or partially supported:</p>
+<ul class="simple">
+<li><p>IBM Secure Execution (SE) on IBM zSystems (s390x) running LinuxONE</p></li>
+<li><p>AMD SEV-SNP</p></li>
+</ul>
+<p>The following platforms are in development:</p>
+<ul class="simple">
+<li><p>ARM CCA</p></li>
+</ul>
+</section>
+<section id="limitations">
+<h2>Limitations<a class="headerlink" href="#limitations" title="Link to this heading">¶</a></h2>
+<p>The following are known limitations of this release:</p>
+<ul class="simple">
+<li><p>Platform support is rapidly changing</p>
+<ul>
+<li><p>Image signature validation with AMD SEV-ES is not covered by CI.</p></li>
+</ul>
+</li>
+<li><p>SELinux is not supported on the host and must be set to permissive if in use.</p></li>
+<li><p>The generic KBS does not yet supported all platforms.</p></li>
+<li><p>The format of encrypted container images is still subject to change</p>
+<ul>
+<li><p>The <a class="reference external" href="https://github.com/containers/ocicrypt">oci-crypt</a> container image format itself may still change</p></li>
+<li><p>The tools to generate images are not in their final form</p></li>
+<li><p>The image format itself is subject to change in upcoming releases</p></li>
+<li><p>Not all image repositories support encrypted container images.</p></li>
+</ul>
+</li>
+<li><p>CoCo currently requires a custom build of <code class="docutils literal notranslate"><span class="pre">containerd</span></code>, which is installed by the operator.</p>
+<ul>
+<li><p>Codepath for pulling images will change significantly in future releases.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">crio</span></code> is only supported with <code class="docutils literal notranslate"><span class="pre">cloud-api-adaptor</span></code>.</p></li>
+</ul>
+</li>
+<li><p>Complete integration with Kubernetes is still in progress.</p>
+<ul>
+<li><p>OpenShift support is not yet complete.</p></li>
+<li><p>Existing APIs do not fully support the CoCo security and threat model. <a class="reference external" href="https://github.com/confidential-containers/community/issues/53">More info</a></p></li>
+<li><p>Some commands accessing confidential data, such as <code class="docutils literal notranslate"><span class="pre">kubectl</span> <span class="pre">exec</span></code>, may either fail to work, or incorrectly expose information to the host</p></li>
+<li><p>Container images must be downloaded separately (inside guest) for each pod. <a class="reference external" href="https://github.com/confidential-containers/community/issues/66">More info</a></p></li>
+</ul>
+</li>
+<li><p>The CoCo community aspires to adopting open source security best practices, but not all practices are adopted yet.</p>
+<ul>
+<li><p>We track our status with the OpenSSF Best Practices Badge, which remained at 64% at the time of this release.</p></li>
+<li><p>Vulnerability reporting mechanisms still need to be created. Public github issues are still appropriate for this release until private reporting is established.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="cve-fixes">
+<h2>CVE Fixes<a class="headerlink" href="#cve-fixes" title="Link to this heading">¶</a></h2>
+<p>None</p>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">Confidential Containers</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html#installation">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html#running-a-workload">Running a workload</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../architecture.html">Confidential Computing Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../architecture.html#confidential-computing-building-blocks">Confidential Computing Building Blocks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../architecture.html#cncf-confidential-containers">CNCF Confidential Containers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../roadmap.html">Confidential Containers Roadmap</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../roadmap.html#short-term-roadmap">Short-Term Roadmap</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../roadmap.html#mid-term-roadmap">Mid-Term Roadmap</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../roadmap.html#longer-term-roadmap">Longer-Term Roadmap</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../alignment.html">Alignment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../CODE_OF_CONDUCT.html">Code of Conduct</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../CONTRIBUTING.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/index.html">Guides</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Release Notes</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="v0.7.0.html">v0.7.0</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">v0.6.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="v0.5.0.html">v0.5.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="v0.4.0.html">v0.4.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="v0.3.0.html">v0.3.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="v0.2.0.html">v0.2.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="v0.1.0.html">v0.1.0</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">Releases stuff</a><ul>
+      <li>Previous: <a href="v0.7.0.html" title="previous chapter">Release Notes for v0.7.0</a></li>
+      <li>Next: <a href="v0.5.0.html" title="next chapter">Release Notes for v0.5.0</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2023, confidential-containers-authors.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 7.2.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      
+      |
+      <a href="../_sources/releases/v0.6.0.md.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

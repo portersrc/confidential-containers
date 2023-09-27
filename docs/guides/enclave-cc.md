@@ -20,7 +20,7 @@ or `sample_kbc`) `IP`,`PORT`, and the `SECURITY_VALIDATE` (`false` or  `true`).
 ```json
 {
     "key_provider": "provider:attestation-agent:KBC::IP:PORT",
-     "security_validate": SECURITY_VALIDATE
+    "security_validate": "SECURITY_VALIDATE"
 }
 ```
 

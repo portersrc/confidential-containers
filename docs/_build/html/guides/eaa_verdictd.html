@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>EAA Verdictd Guide &#8212; Confidential Containers  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=4f649999" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=039e1c02" />
+    <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Enclave-CC" href="enclave-cc.html" />
+    <link rel="prev" title="Guides stuff" href="index.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="eaa-verdictd-guide">
+<h1>EAA Verdictd Guide<a class="headerlink" href="#eaa-verdictd-guide" title="Link to this heading">¶</a></h1>
+<p>EAA is used to perform attestation at runtime and provide guest with confidential resources such as keys.
+It is based on <a class="reference external" href="https://github.com/inclavare-containers/rats-tls">rats-tls</a>.</p>
+<p><a class="reference external" href="https://github.com/inclavare-containers/verdictd">Verdictd</a> is the Key Broker Service and Attestation Service of EAA.
+The EAA KBC is an optional module in the attestation-agent at compile time,
+which can be used to communicate with Verdictd.
+The communication is established on the encrypted channel provided by rats-tls.</p>
+<p>EAA can now be used on Intel TDX and Intel SGX platforms.</p>
+<section id="create-encrypted-image">
+<h2>Create encrypted image<a class="headerlink" href="#create-encrypted-image" title="Link to this heading">¶</a></h2>
+<p>Before build encrypted image, you need to make sure Skopeo and Verdictd(EAA KBS) have been installed:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/containers/skopeo">Skopeo</a>: the command line utility to perform encryption operations.</p></li>
+<li><p><a class="reference external" href="https://github.com/inclavare-containers/verdictd">Verdictd</a>: EAA Key Broker Service and Attestation Service.</p></li>
+</ul>
+<ol class="arabic simple">
+<li><p>Pull unencrypted image.</p></li>
+</ol>
+<p>Here use <code class="docutils literal notranslate"><span class="pre">alpine:latest</span></code> for example:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="si">${</span><span class="nv">SKOPEO_HOME</span><span class="si">}</span>/bin/skopeo<span class="w"> </span>copy<span class="w"> </span>--insecure-policy<span class="w">　</span>docker://docker.io/library/alpine:latest<span class="w"> </span>oci:busybox
+</pre></div>
+</div>
+<ol class="arabic simple" start="2">
+<li><p>Follow the <a class="reference external" href="https://github.com/inclavare-containers/verdictd#generate-encrypted-container-image">Verdictd README #Generate encrypted container image</a> to encrypt the image.</p></li>
+<li><p>Publish the encrypted image to your registry.</p></li>
+</ol>
+</section>
+<section id="deploy-encrypted-image">
+<h2>Deploy encrypted image<a class="headerlink" href="#deploy-encrypted-image" title="Link to this heading">¶</a></h2>
+<ol class="arabic simple">
+<li><p>Build rootfs with EAA component:</p></li>
+</ol>
+<p>Specify <code class="docutils literal notranslate"><span class="pre">AA_KBC=eaa_kbc</span></code> parameters when using kata-containers <code class="docutils literal notranslate"><span class="pre">rootfs.sh</span></code> scripts to create rootfs.</p>
+<ol class="arabic simple" start="2">
+<li><p>Launch Verdictd</p></li>
+</ol>
+<p>Verdictd performs remote attestation at runtime and provides the key needed to decrypt the image.
+It is actually both Key Broker Service and Attestation Service of EAA.
+So when deploy the encrypted image, Verdictd is needed to be launched:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>verdictd<span class="w"> </span>--listen<span class="w"> </span>&lt;<span class="nv">$ip</span>&gt;:&lt;<span class="nv">$port</span>&gt;<span class="w"> </span>--mutual
+</pre></div>
+</div>
+<blockquote>
+<div><p><strong>Note</strong> The communication between Verdictd and EAA KBC is based on rats-tls,
+so you need to confirm that <a class="reference external" href="https://github.com/inclavare-containers/rats-tls">rats-tls</a> has been correctly installed in your running environment.</p>
+</div></blockquote>
+<ol class="arabic simple" start="3">
+<li><p>Agent Configuration</p></li>
+</ol>
+<p>Add configuration <code class="docutils literal notranslate"><span class="pre">aa_kbc_params=</span> <span class="pre">'eaa_kbc::&lt;$IP&gt;:&lt;$PORT&gt;'</span></code> to agent config file, the IP and PORT should be consistent with verdictd.</p>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">Confidential Containers</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html#installation">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html#running-a-workload">Running a workload</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../architecture.html">Confidential Computing Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../architecture.html#confidential-computing-building-blocks">Confidential Computing Building Blocks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../architecture.html#cncf-confidential-containers">CNCF Confidential Containers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../roadmap.html">Confidential Containers Roadmap</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../roadmap.html#short-term-roadmap">Short-Term Roadmap</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../roadmap.html#mid-term-roadmap">Mid-Term Roadmap</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../roadmap.html#longer-term-roadmap">Longer-Term Roadmap</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../alignment.html">Alignment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../CODE_OF_CONDUCT.html">Code of Conduct</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../CONTRIBUTING.html">Contributing</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Guides</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">EAA Verdictd Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="enclave-cc.html">Enclave-CC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ephemeral_storage.html">Trusted Ephemeral Storage for container images</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nontee_demo.html">Encrypted Container Images without Hardware Support</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sev.html">SEV-ES Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="troubleshooting.html">Troubleshooting</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../releases/index.html">Release Notes</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">Guides stuff</a><ul>
+      <li>Previous: <a href="index.html" title="previous chapter">Guides stuff</a></li>
+      <li>Next: <a href="enclave-cc.html" title="next chapter">Enclave-CC</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2023, confidential-containers-authors.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 7.2.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      
+      |
+      <a href="../_sources/guides/eaa_verdictd.md.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Enclave-CC &#8212; Confidential Containers  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=4f649999" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=039e1c02" />
+    <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Trusted Ephemeral Storage for container images" href="ephemeral_storage.html" />
+    <link rel="prev" title="EAA Verdictd Guide" href="eaa_verdictd.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="enclave-cc">
+<h1>Enclave-CC<a class="headerlink" href="#enclave-cc" title="Link to this heading">¶</a></h1>
+<p><code class="docutils literal notranslate"><span class="pre">enclave-cc</span></code> provides process-based isolation using SGX.
+This guide assumes that you already have a Kubernetes cluster
+and have deployed the operator as described in the <strong>Installation</strong>
+section of the <a class="reference internal" href="../quickstart.html"><span class="std std-doc">quickstart guide</span></a>.</p>
+<section id="configuring-enclave-cc-custom-resource-to-use-a-different-kbc">
+<h2>Configuring enclave-cc custom resource to use a different KBC<a class="headerlink" href="#configuring-enclave-cc-custom-resource-to-use-a-different-kbc" title="Link to this heading">¶</a></h2>
+<p><strong>Note</strong> Before configuring KBC, please refer to the
+<a class="reference internal" href="../quickstart.html#deploy-and-configure-tenant-side-coco-key-broker-system-cluster"><span class="std std-ref">guide</span></a> to deploy KBS cluster.</p>
+<p><strong>Note</strong> The KBC configuration changes to the enclave-cc custom resource yaml
+must be made <strong>before</strong> deploying it.</p>
+<p>Enclave CC supports cc-kbc and sample-kbc, in order to use them, users will have to
+properly configure a <code class="docutils literal notranslate"><span class="pre">decrypt_config.conf</span></code>, in order to set the <code class="docutils literal notranslate"><span class="pre">KBC</span></code> (<code class="docutils literal notranslate"><span class="pre">cc_kbc</span></code>
+or <code class="docutils literal notranslate"><span class="pre">sample_kbc</span></code>) <code class="docutils literal notranslate"><span class="pre">IP</span></code>,<code class="docutils literal notranslate"><span class="pre">PORT</span></code>, and the <code class="docutils literal notranslate"><span class="pre">SECURITY_VALIDATE</span></code> (<code class="docutils literal notranslate"><span class="pre">false</span></code> or  <code class="docutils literal notranslate"><span class="pre">true</span></code>).</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;key_provider&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;provider:attestation-agent:KBC::IP:PORT&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;security_validate&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;SECURITY_VALIDATE&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The following is an example of <code class="docutils literal notranslate"><span class="pre">cc_kbc</span></code>:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;key_provider&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;provider:attestation-agent:cc_kbc::http://127.0.0.1:8080&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;security_validate&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The following is an example of <code class="docutils literal notranslate"><span class="pre">sample_kbc</span></code>:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;key_provider&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;provider:attestation-agent:sample_kbc::127.0.0.1:50000&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;security_validate&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Once that’s set according to the users needs, the user will then have to run:
+<code class="docutils literal notranslate"><span class="pre">cat</span> <span class="pre">decrypt_config.conf</span> <span class="pre">|</span> <span class="pre">base64</span> <span class="pre">-w</span> <span class="pre">0</span></code> in order to get the data encoded and
+set it accordingly <a class="reference external" href="https://github.com/confidential-containers/operator/blob/6f241fbc056f0a5d9e1bd2c10b2cedc0782b99ff/config/samples/enclave-cc/base/ccruntime-enclave-cc.yaml#L124">here</a>.</p>
+</section>
+<section id="creating-a-sample-coco-workload-using-enclave-cc">
+<h2>Creating a sample CoCo workload using enclave-cc<a class="headerlink" href="#creating-a-sample-coco-workload-using-enclave-cc" title="Link to this heading">¶</a></h2>
+<p>As an example, we setup a sample <em>hello world</em>
+workload with an encrypted and cosign signed container image using the <code class="docutils literal notranslate"><span class="pre">enclave-cc</span></code> runtime class for process based TEEs.
+This encrypted image is only used for testing.
+If you want to use it in your own production use cases, please refer to
+the <a class="reference internal" href="../quickstart.html#encrypting-an-image"><span class="std std-ref">guide</span></a> to create a new encrypted image and deploy it.</p>
+<p>The deployment below assumes the hardware SGX mode build is installed by the operator. To try on a non-TEE system, please
+use simulate SGX mode build.</p>
+<p>The example uses a trivial hello world C application:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Pod</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">enclave-cc-pod</span>
+<span class="nt">spec</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">containers</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ghcr.io/confidential-containers/test-container-enclave-cc:encrypted</span>
+<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">hello-world</span>
+<span class="w">    </span><span class="nt">workingDir</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;/run/rune/boot_instance/&quot;</span>
+<span class="w">    </span><span class="nt">resources</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">limits</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">sgx.intel.com/epc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">600Mi</span>
+<span class="w">    </span><span class="nt">env</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">OCCLUM_RELEASE_ENCLAVE</span>
+<span class="w">      </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;1&quot;</span>
+<span class="w">    </span><span class="nt">command</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/run/rune/boot_instance/build/bin/occlum-run</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/bin/hello_world</span>
+<span class="w">  </span><span class="nt">runtimeClassName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">enclave-cc</span>
+</pre></div>
+</div>
+<p><strong>Note</strong> When the hardware SGX mode payload is used in an SGX enabled cluster, <code class="docutils literal notranslate"><span class="pre">sgx.intel.com/epc:</span> <span class="pre">600Mi</span></code>
+resource request must be added to the pod spec.</p>
+<p>Again, create a pod YAML file as previously described (this time we named it <code class="docutils literal notranslate"><span class="pre">enclave-cc-pod.yaml</span></code>) .</p>
+<p>Create the workload:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>enclave-cc-pod.yaml
+</pre></div>
+</div>
+<p>Output:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pod</span><span class="o">/</span><span class="n">enclave</span><span class="o">-</span><span class="n">cc</span><span class="o">-</span><span class="n">pod</span> <span class="n">created</span>
+</pre></div>
+</div>
+<p>Ensure the pod was created successfully (in running state):</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>kubectl<span class="w"> </span>get<span class="w"> </span>pods
+</pre></div>
+</div>
+<p>Output:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">NAME</span>                 <span class="n">READY</span>   <span class="n">STATUS</span>    <span class="n">RESTARTS</span>   <span class="n">AGE</span>
+<span class="n">enclave</span><span class="o">-</span><span class="n">cc</span><span class="o">-</span><span class="n">pod</span>   <span class="mi">1</span><span class="o">/</span><span class="mi">1</span>     <span class="n">Running</span>   <span class="mi">0</span>          <span class="mi">22</span><span class="n">s</span>
+</pre></div>
+</div>
+<p>Check the pod is running as expected:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>kubectl<span class="w"> </span>logs<span class="w"> </span>enclave-cc-pod<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-5
+</pre></div>
+</div>
+<p>Output:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>[&quot;init&quot;]
+Hello world!
+
+Hello world!
+
+</pre></div>
+</div>
+<p>We can also verify the host does not have the image for others to use:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>crictl<span class="w"> </span>-r<span class="w"> </span>unix:///run/containerd/containerd.sock<span class="w"> </span>image<span class="w"> </span>ls<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>helloworld_enc
+</pre></div>
+</div>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">Confidential Containers</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html#installation">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html#running-a-workload">Running a workload</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../architecture.html">Confidential Computing Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../architecture.html#confidential-computing-building-blocks">Confidential Computing Building Blocks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../architecture.html#cncf-confidential-containers">CNCF Confidential Containers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../roadmap.html">Confidential Containers Roadmap</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../roadmap.html#short-term-roadmap">Short-Term Roadmap</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../roadmap.html#mid-term-roadmap">Mid-Term Roadmap</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../roadmap.html#longer-term-roadmap">Longer-Term Roadmap</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../alignment.html">Alignment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../CODE_OF_CONDUCT.html">Code of Conduct</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../CONTRIBUTING.html">Contributing</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Guides</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="eaa_verdictd.html">EAA Verdictd Guide</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Enclave-CC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ephemeral_storage.html">Trusted Ephemeral Storage for container images</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nontee_demo.html">Encrypted Container Images without Hardware Support</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sev.html">SEV-ES Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="troubleshooting.html">Troubleshooting</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../releases/index.html">Release Notes</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">Guides stuff</a><ul>
+      <li>Previous: <a href="eaa_verdictd.html" title="previous chapter">EAA Verdictd Guide</a></li>
+      <li>Next: <a href="ephemeral_storage.html" title="next chapter">Trusted Ephemeral Storage for container images</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2023, confidential-containers-authors.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 7.2.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      
+      |
+      <a href="../_sources/guides/enclave-cc.md.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

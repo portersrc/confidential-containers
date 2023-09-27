@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Encrypted Container Images without Hardware Support &#8212; Confidential Containers  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=4f649999" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=039e1c02" />
+    <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="SEV-ES Guide" href="sev.html" />
+    <link rel="prev" title="Trusted Ephemeral Storage for container images" href="ephemeral_storage.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="encrypted-container-images-without-hardware-support">
+<h1>Encrypted Container Images without Hardware Support<a class="headerlink" href="#encrypted-container-images-without-hardware-support" title="Link to this heading">¶</a></h1>
+<p>Without Confidential Computing hardware, there is no way to securely provision
+the keys for an encrypted image. Nonetheless, in this demo we describe how to
+test encrypted images support with the non-tee <code class="docutils literal notranslate"><span class="pre">kata</span></code>/<code class="docutils literal notranslate"><span class="pre">kata-qemu</span></code> runtimeclass.</p>
+<section id="creating-a-coco-workload-using-a-pre-existing-encrypted-image">
+<h2>Creating a CoCo workload using a pre-existing encrypted image<a class="headerlink" href="#creating-a-coco-workload-using-a-pre-existing-encrypted-image" title="Link to this heading">¶</a></h2>
+<p>We will now proceed to download and run a sample encrypted container image using the CoCo building blocks.</p>
+<p>A demo container image is provided at <a class="reference external" href="https://hub.docker.com/r/katadocker/ccv0-ssh">docker.io/katadocker/ccv0-ssh</a>.
+It is encrypted with <a class="reference external" href="https://github.com/confidential-containers/attestation-agent">Attestation Agent</a>’s <a class="reference external" href="https://github.com/confidential-containers/attestation-agent/tree/64c12fbecfe90ba974d5fe4896bf997308df298d/src/kbc_modules/offline_fs_kbc">offline file system key broker</a> and <a class="reference external" href="https://github.com/confidential-containers/documentation/blob/main/demos/ssh-demo/aa-offline_fs_kbc-keys.json"><code class="docutils literal notranslate"><span class="pre">aa-offline_fs_kbc-keys.json</span></code></a> as its key file.</p>
+<p>We have prepared a sample CoCo operator custom resource that is based on the standard <code class="docutils literal notranslate"><span class="pre">ccruntime.yaml</span></code>, but in addition has the the decryption keys and configuration required to decrypt this sample container image.</p>
+<blockquote>
+<div><p><strong>Note</strong> All pods started with this sample resource will be able to decrypt the sample container and all keys shown are for demo purposes only and should not be used in production.</p>
+</div></blockquote>
+<p>To test out creating a workload from the sample encrypted container image, we can take the following steps:</p>
+<section id="swap-out-the-standard-custom-resource-for-our-sample">
+<h3>Swap out the standard custom resource for our sample<a class="headerlink" href="#swap-out-the-standard-custom-resource-for-our-sample" title="Link to this heading">¶</a></h3>
+<p>Support for multiple custom resources in not available in the current release. Consequently, if a custom resource already exists, then you’ll need to remove it first before deploying a new one. We can remove the standard custom resource with:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>kubectl<span class="w"> </span>delete<span class="w"> </span>-k<span class="w"> </span>github.com/confidential-containers/operator/config/samples/ccruntime/&lt;CCRUNTIME_OVERLAY&gt;?ref<span class="o">=</span>&lt;RELEASE_VERSION&gt;
+</pre></div>
+</div>
+<p>and in it’s place install the modified version with the sample container’s decryption key:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>kubectl<span class="w"> </span>apply<span class="w"> </span>-k<span class="w"> </span>github.com/confidential-containers/operator/config/samples/ccruntime/ssh-demo?ref<span class="o">=</span>&lt;RELEASE_VERSION&gt;
+</pre></div>
+</div>
+<p>Wait until each pod has the STATUS of Running.</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>confidential-containers-system<span class="w"> </span>--watch
+</pre></div>
+</div>
+</section>
+<section id="test-creating-a-workload-from-the-sample-encrypted-image">
+<h3>Test creating a workload from the sample encrypted image<a class="headerlink" href="#test-creating-a-workload-from-the-sample-encrypted-image" title="Link to this heading">¶</a></h3>
+<p>Create a new Kubernetes deployment that uses the <code class="docutils literal notranslate"><span class="pre">docker.io/katadocker/ccv0-ssh</span></code> container image with:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>cat<span class="w"> </span><span class="s">&lt;&lt; EOF &gt; ccv0-ssh-demo.yaml</span>
+<span class="s">kind: Service</span>
+<span class="s">apiVersion: v1</span>
+<span class="s">metadata:</span>
+<span class="s">  name: ccv0-ssh</span>
+<span class="s">spec:</span>
+<span class="s">  selector:</span>
+<span class="s">    app: ccv0-ssh</span>
+<span class="s">  ports:</span>
+<span class="s">  - port: 22</span>
+<span class="s">---</span>
+<span class="s">kind: Deployment</span>
+<span class="s">apiVersion: apps/v1</span>
+<span class="s">metadata:</span>
+<span class="s">  name: ccv0-ssh</span>
+<span class="s">spec:</span>
+<span class="s">  selector:</span>
+<span class="s">    matchLabels:</span>
+<span class="s">      app: ccv0-ssh</span>
+<span class="s">  template:</span>
+<span class="s">    metadata:</span>
+<span class="s">      labels:</span>
+<span class="s">        app: ccv0-ssh</span>
+<span class="s">    spec:</span>
+<span class="s">      runtimeClassName: kata</span>
+<span class="s">      containers:</span>
+<span class="s">      - name: ccv0-ssh</span>
+<span class="s">        image: docker.io/katadocker/ccv0-ssh</span>
+<span class="s">        imagePullPolicy: Always</span>
+<span class="s">EOF</span>
+</pre></div>
+</div>
+<p>Apply this with:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>ccv0-ssh-demo.yaml
+</pre></div>
+</div>
+<p>and wait for the pod to start. This process should show that we are able to pull the encrypted image, and using the decryption key configured in the CoCo sample guest image, decrypt the container image and create a workload using it.</p>
+<p>The demo image has an SSH host key embedded in it, which is protected by it’s encryption, but we can download the sample private key and use this to ssh into the container to validate it hasn’t been tampered with.</p>
+<p>Download the SSH key with:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>curl<span class="w"> </span>-Lo<span class="w"> </span>ccv0-ssh<span class="w"> </span>https://raw.githubusercontent.com/confidential-containers/documentation/main/demos/ssh-demo/ccv0-ssh
+</pre></div>
+</div>
+<p>Ensure that the permissions are set correctly with:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>chmod<span class="w"> </span><span class="m">600</span><span class="w"> </span>ccv0-ssh
+</pre></div>
+</div>
+<p>We can then use the key to ssh into the container:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>ssh<span class="w"> </span>-i<span class="w"> </span>ccv0-ssh<span class="w"> </span>root@<span class="k">$(</span>kubectl<span class="w"> </span>get<span class="w"> </span>service<span class="w"> </span>ccv0-ssh<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s2">&quot;{.spec.clusterIP}&quot;</span><span class="k">)</span>
+</pre></div>
+</div>
+<p>You will be prompted about whether the host key fingerprint is correct. This fingerprint should match the one specified in the container image: <code class="docutils literal notranslate"><span class="pre">wK7uOpqpYQczcgV00fGCh+X97sJL3f6G1Ku4rvlwtR0.</span></code></p>
+</section>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">Confidential Containers</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html#installation">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html#running-a-workload">Running a workload</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../architecture.html">Confidential Computing Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../architecture.html#confidential-computing-building-blocks">Confidential Computing Building Blocks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../architecture.html#cncf-confidential-containers">CNCF Confidential Containers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../roadmap.html">Confidential Containers Roadmap</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../roadmap.html#short-term-roadmap">Short-Term Roadmap</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../roadmap.html#mid-term-roadmap">Mid-Term Roadmap</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../roadmap.html#longer-term-roadmap">Longer-Term Roadmap</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../alignment.html">Alignment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../CODE_OF_CONDUCT.html">Code of Conduct</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../CONTRIBUTING.html">Contributing</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Guides</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="eaa_verdictd.html">EAA Verdictd Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="enclave-cc.html">Enclave-CC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ephemeral_storage.html">Trusted Ephemeral Storage for container images</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Encrypted Container Images without Hardware Support</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sev.html">SEV-ES Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="troubleshooting.html">Troubleshooting</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../releases/index.html">Release Notes</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">Guides stuff</a><ul>
+      <li>Previous: <a href="ephemeral_storage.html" title="previous chapter">Trusted Ephemeral Storage for container images</a></li>
+      <li>Next: <a href="sev.html" title="next chapter">SEV-ES Guide</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2023, confidential-containers-authors.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 7.2.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      
+      |
+      <a href="../_sources/guides/nontee_demo.md.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -10,7 +10,7 @@ to protect containers and data and to deliver cloud native
 confidential computing.
 
 **We have a new release every 6 weeks!**
-See [Release Notes](./releases/) or [Quickstart Guide](./quickstart.md)
+See [Release Notes](./releases/index.rst) or [Quickstart Guide](./quickstart.md)
 
 Our key considerations are:
 - Allow cloud native application owners to enforce application security requirements

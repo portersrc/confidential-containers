@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Guides stuff &#8212; Confidential Containers  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=4f649999" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=039e1c02" />
+    <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="EAA Verdictd Guide" href="eaa_verdictd.html" />
+    <link rel="prev" title="Contributor Guide" href="../CONTRIBUTING.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="guides-stuff">
+<h1>Guides stuff<a class="headerlink" href="#guides-stuff" title="Link to this heading">¶</a></h1>
+<p>This is placeholder text to introduce the guides.</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="eaa_verdictd.html">EAA Verdictd Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="eaa_verdictd.html#create-encrypted-image">Create encrypted image</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eaa_verdictd.html#deploy-encrypted-image">Deploy encrypted image</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="enclave-cc.html">Enclave-CC</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="enclave-cc.html#configuring-enclave-cc-custom-resource-to-use-a-different-kbc">Configuring enclave-cc custom resource to use a different KBC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="enclave-cc.html#creating-a-sample-coco-workload-using-enclave-cc">Creating a sample CoCo workload using enclave-cc</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="ephemeral_storage.html">Trusted Ephemeral Storage for container images</a></li>
+<li class="toctree-l1"><a class="reference internal" href="nontee_demo.html">Encrypted Container Images without Hardware Support</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="nontee_demo.html#creating-a-coco-workload-using-a-pre-existing-encrypted-image">Creating a CoCo workload using a pre-existing encrypted image</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="nontee_demo.html#swap-out-the-standard-custom-resource-for-our-sample">Swap out the standard custom resource for our sample</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nontee_demo.html#test-creating-a-workload-from-the-sample-encrypted-image">Test creating a workload from the sample encrypted image</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="sev.html">SEV-ES Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="sev.html#creating-a-coco-workload-using-a-pre-existing-encrypted-image-on-sev">Creating a CoCo workload using a pre-existing encrypted image on SEV</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="sev.html#platform-setup">Platform Setup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sev.html#install-sevctl-and-export-sev-certificate-chain">Install sevctl and Export SEV Certificate Chain</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sev.html#setup-and-run-the-simple-kbs">Setup and Run the simple-kbs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sev.html#launch-the-pod-and-verify-sev-encryption">Launch the Pod and Verify SEV Encryption</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sev.html#verify-sev-memory-encryption">Verify SEV Memory Encryption</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="sev.html#create-an-encrypted-image">Create an Encrypted Image</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sev.html#creating-a-simple-kbs-policy-to-verify-the-sev-guest-firmware-measurement">Creating a simple-kbs Policy to Verify the SEV Guest Firmware Measurement</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="troubleshooting.html">Troubleshooting</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="troubleshooting.html#kubernetes">Kubernetes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="troubleshooting.html#coco-debugging">CoCo Debugging</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="troubleshooting.html#vm-doesn-t-start">VM Doesn’t Start</a></li>
+<li class="toctree-l3"><a class="reference internal" href="troubleshooting.html#vm-does-start">VM Does Start</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="troubleshooting.html#failed-to-create-shim-task-failed-to-mount-run-kata-containers-shared-containers-container-name-rootfs">failed to create shim task: failed to mount “/run/kata-containers/shared/containers/CONTAINER_NAME/rootfs”</a></li>
+<li class="toctree-l4"><a class="reference internal" href="troubleshooting.html#debug-console">Debug Console</a></li>
+<li class="toctree-l4"><a class="reference internal" href="troubleshooting.html#guest-firmware-logs">Guest Firmware Logs</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">Confidential Containers</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html#installation">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html#running-a-workload">Running a workload</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../architecture.html">Confidential Computing Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../architecture.html#confidential-computing-building-blocks">Confidential Computing Building Blocks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../architecture.html#cncf-confidential-containers">CNCF Confidential Containers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../roadmap.html">Confidential Containers Roadmap</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../roadmap.html#short-term-roadmap">Short-Term Roadmap</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../roadmap.html#mid-term-roadmap">Mid-Term Roadmap</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../roadmap.html#longer-term-roadmap">Longer-Term Roadmap</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../alignment.html">Alignment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../CODE_OF_CONDUCT.html">Code of Conduct</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../CONTRIBUTING.html">Contributing</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Guides</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="eaa_verdictd.html">EAA Verdictd Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="enclave-cc.html">Enclave-CC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ephemeral_storage.html">Trusted Ephemeral Storage for container images</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nontee_demo.html">Encrypted Container Images without Hardware Support</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sev.html">SEV-ES Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="troubleshooting.html">Troubleshooting</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../releases/index.html">Release Notes</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="../CONTRIBUTING.html" title="previous chapter">Contributor Guide</a></li>
+      <li>Next: <a href="eaa_verdictd.html" title="next chapter">EAA Verdictd Guide</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2023, confidential-containers-authors.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 7.2.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      
+      |
+      <a href="../_sources/guides/index.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
