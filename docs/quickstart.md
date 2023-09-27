@@ -1,4 +1,6 @@
-# Getting Started
+# Quickstart
+
+## Getting Started
 
 Confidential Containers (CoCo) provides a uniform workflow, trust model, and feature set
 across a wide array of platforms and deployment models.
@@ -17,14 +19,14 @@ see the [guides](./guides/index.rst) directory.
 Confidential Containers is still maturing. See [release notes](./releases/index.rst) for currrent
 hardware support and limitations.
 
-# Installation
+## Installation
 
 You can enable Confidential Containers in an existing Kubernetes cluster using the Confidential Containers Operator.
 When installation is finished, your cluster will have new runtime classes for different hardware platforms,
 including a generic runtime for testing CoCo without confidential hardware support, a runtime using a remote hypervisor
 that allows for cloud integration, a runtime for process-based isolation using SGX, as well as runtimes for TDX and SEV.
 
-## Prerequisites
+### Prerequisites
 
 To run the operator you must have an existing Kubernetes cluster that meets the followng requirements.
 
@@ -52,9 +54,9 @@ Also, with the `enclave-cc` runtime class, the cluster must be prepared so that 
 on the worker nodes is **not** on an overlayfs mount but the path is a `hostPath` mount (see
 [a sample configuration](https://github.com/confidential-containers/operator/blob/cf6a4f38114f7c5b71daec6cb666b1b40bcea140/tests/e2e/enclave-cc-kind-config.yaml#L6-L8))
 
-## Operator Installation
+### Operator Installation
 
-### Deploy the operator
+#### Deploy the operator
 
 Deploy the operator by running the following command  where `<RELEASE_VERSION>` needs to be substituted
 with the desired [release tag](https://github.com/confidential-containers/operator/tags).
@@ -74,9 +76,9 @@ Wait until each pod has the STATUS of Running.
 kubectl get pods -n confidential-containers-system --watch
 ```
 
-### Create the custom resource
+#### Create the custom resource
 
-#### Create custom resource for kata
+##### Create custom resource for kata
 
 Creating a custom resource installs the required CC runtime pieces into the cluster node and creates
 the `RuntimeClasses`
@@ -103,7 +105,7 @@ Wait until each pod has the STATUS of Running.
 kubectl get pods -n confidential-containers-system --watch
 ```
 
-#### Create custom resource for enclave-cc
+##### Create custom resource for enclave-cc
 
 **Note** For `enclave-cc` certain configuration changes, such as setting the
 URI of the KBS, must be made **before** applying the custom resource. 
@@ -123,7 +125,7 @@ kubectl apply -k github.com/confidential-containers/operator/config/samples/encl
 ```
 for the **simulated** SGX mode build or **hardware** SGX mode build, respectively.
 
-### Verify Installation
+#### Verify Installation
 
 Check the `RuntimeClasses` that got created.
 
@@ -161,16 +163,16 @@ NAME            HANDLER         AGE
 enclave-cc      enclave-cc      9m55s
 ```
 
-### Platform Setup
+#### Platform Setup
 
 While the operator deploys all the required binaries and artifacts and sets up runtime classes that use them,
 certain platforms may require additional configuration to enable confidential computing. For example, the host
 kernel and firmware might need to be configured.
 See the [guides](./guides/index.rst) for more information.
 
-# Running a workload
+## Running a workload
 
-## Creating a sample CoCo workload
+### Creating a sample CoCo workload
 
 Once you've used the operator to install Confidential Containers, you can run a pod with CoCo by simply adding a runtime class.
 First, we will use the `kata` runtime class which uses CoCo without hardware support.
@@ -229,7 +231,7 @@ Now go back to the k8s node and ensure that you still don’t have any bitnami/n
 root@cluster01-master-0:/home/ubuntu# crictl  -r  unix:///run/containerd/containerd.sock image ls | grep bitnami/nginx
 ```
 
-## Encrypted and/or signed images with attestation
+### Encrypted and/or signed images with attestation
 
 The previous example does not involve any attestation because the workload container isn't signed or encrypted
 and the workload itself does not require any secrets.
@@ -249,7 +251,7 @@ CoCo provides a generic Key Broker Service (KBS) that the rest of this guide wil
 The SEV runtime class uses `simple-kbs`, which is described in the [SEV guide](./guides/sev.md).
 There is also `eaa_kbc`/`verdictd` which is described [here](./guides/eaa_verdictd.md).
 
-### Select Runtime Class
+#### Select Runtime Class
 
 To use CoCo with confidential hardware, first switch to the appropriate runtime class.
 TDX has two runtime classes, `kata-qemu-tdx` and `kata-clh-tdx`. One uses QEMU as VMM and TDVF as firmware. The other uses Cloud Hypervisor as VMM and TD-Shim as firmware.
@@ -258,7 +260,7 @@ For SEV(-ES) use the `kata-qemu-sev` runtime class and follow the [SEV guide](./
 
 For `enclave-cc` follow the [enclave-cc guide](./guides/enclave-cc.md).
 
-### Deploy and Configure tenant-side CoCo Key Broker System cluster
+#### Deploy and Configure tenant-side CoCo Key Broker System cluster
 
 The following describes how to run and provision the generic KBS.
 The KBS should be run in a trusted environment. The KBS is not just one service,
@@ -296,7 +298,7 @@ When KBS cluster is running, you can modify the policy file used by AS policy en
 
 - `$KBS_DIR_PATH/data/attestation-service/opa/policy.rego`: Policy file for evidence verification of AS, refer to [AS Policy Engine](https://github.com/confidential-containers/attestation-service#policy-engine) for more infomation.
 
-### Encrypting an Image
+#### Encrypting an Image
 
 [skopeo](https://github.com/containers/skopeo) is required to encrypt the container image.
 Follow the [instructions](https://github.com/containers/skopeo/blob/main/install.md) to install `skopeo`.
@@ -331,7 +333,7 @@ skopeo copy oci:busybox:encrypted [SCHEME]://[REGISTRY_URL]:encrypted
 ```
 Be sure to replace `[SCHEME]` with registry scheme type like `docker`, replace `[REGISTRY_URL]` with the desired registry URL like `docker.io/encrypt_test/busybox`.
 
-### Signing an Image
+#### Signing an Image
 
 [cosign](https://github.com/sigstore/cosign) is required to sign the container image. Follow the instructions here to install `cosign`:
 
@@ -380,7 +382,7 @@ mkdir -p $KBS_DIR_PATH/data/kbs-storage/default/security-policy
 cp security-policy.json $KBS_DIR_PATH/data/kbs-storage/default/security-policy/test
 ```
 
-### Deploy encrypted image as a CoCo workload on CC HW
+#### Deploy encrypted image as a CoCo workload on CC HW
 
 Here is a sample yaml for encrypted image deploying:
 
