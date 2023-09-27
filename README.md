@@ -1,4 +1,4 @@
-![logo](./images/coco_logo.png)
+![logo](./docs/images/coco_logo.png)
 
 # Confidential Containers
 
@@ -10,7 +10,7 @@ to protect containers and data and to deliver cloud native
 confidential computing.
 
 **We have a new release every 6 weeks!**
-See [Release Notes](./releases/index.rst) or [Quickstart Guide](./quickstart.md)
+See [Release Notes](./releases/index.rst) or [Quickstart Guide](./docs/quickstart.md)
 
 Our key considerations are:
 - Allow cloud native application owners to enforce application security requirements
@@ -30,14 +30,14 @@ delivering Confidential Computing for guest applications or data inside the TEE
 [![asciicast](https://asciinema.org/a/eGHhZdQY3uYnDalFAfuB7VYqF.svg)](https://asciinema.org/a/eGHhZdQY3uYnDalFAfuB7VYqF)
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fconfidential-containers%2Fcommunity.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fconfidential-containers%2Fcommunity?ref=badge_shield)
 
-- [Project Overview](./overview.md)
-- [Project Architecture](./architecture.md)
-- [Our Roadmap](./roadmap.md)
-- [Alignment with other Projects](alignment.md)
+- [Project Overview](./docs/overview.md)
+- [Project Architecture](./docs/architecture.md)
+- [Our Roadmap](./docs/roadmap.md)
+- [Alignment with other Projects](./docs/alignment.md)
 
 
 ### Contribute...
-- [CONTRIBUTING](CONTRIBUTING.md)
+- [CONTRIBUTING](docs/CONTRIBUTING.md)
 
 
 ## License
