@@ -1,10 +1,10 @@
-Guides stuff
-============
+Guides
+======
 
-This is placeholder text to introduce the guides.
 
 
 .. toctree::
+    :maxdepth: 1
 
     eaa_verdictd
     enclave-cc

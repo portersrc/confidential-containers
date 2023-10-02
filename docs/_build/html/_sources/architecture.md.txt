@@ -1,4 +1,6 @@
-# Confidential Computing Overview
+# Architecture
+
+## Confidential Computing Overview
 
 > Confidential Computing protects data in use by performing computation in a
 > hardware-based Trusted Execution Environment.
@@ -22,9 +24,9 @@ Key Characteristics of Confidential Computing, as defined by the
 - **Code integrity:** Unauthorized entities cannot add, remove, or alter code
   executing in the TEE
 
-# Confidential Computing Building Blocks
+## Confidential Computing Building Blocks
 
-## Key Components
+### Key Components
 
 The following diagram shows how the different building blocks for Confidential
 Computing (CC) come together:
@@ -86,7 +88,7 @@ example:
 - Decrypting and unpacking a protected container image, and running its
   associated  workload.
 
-## Confidential Container Stack
+### Confidential Container Stack
 
 The CC components can be arranged together and configured to provide
 containerized workloads with the Confidential Computing security guarantees.
@@ -103,7 +105,7 @@ same goals and attributes:
 - Provide an unmodified Kubernetes user and developer experience.
 - Deploy unmodified workloads.
 
-### VM-based TEE
+#### VM-based TEE
 
 VM-based TEEs (e.g. AMD SEV, IBM SE or Intel TDX) can be used to build a
 confidential containers software architecture:
@@ -131,7 +133,7 @@ Following is the workflow when deploying a Kubernetes pod with VM-based TEEs:
   - Enclave verifies/decrypts the container image(s) : **step 6 in the diagram**.
   - Enclave starts the container workload.
 
-### Process-based TEE
+#### Process-based TEE
 
 The confidential containers software architecture can also be built on top of
 process-based TEEs like e.g. Intel SGX:
@@ -173,7 +175,7 @@ require a separate VM and CC-aware hypervisor.
 The up-to-date design for the Confidential Containers process-based architecture
 is maintained in the [enclave-cc documentation](https://github.com/confidential-containers/enclave-cc/blob/main/docs/design.md).
 
-# CNCF Confidential Containers
+## CNCF Confidential Containers
 
 The CNCF Confidential Containers project is an implementation of the
 confidential containers architecture described in the previous section.

@@ -8,7 +8,7 @@ the mid/long-term roadmap (4-12 months):
   and adding a number of enhancements both to the solution and the project (such as CI,
   interoperability with other projects etc.)
 
-# Short-Term Roadmap
+## Short-Term Roadmap
 The short-term roadmap aims to achieve the following:
 - MVP stack for running confidential containers
 - Based on and compatible with Kata Containers 2
@@ -40,7 +40,7 @@ Tasks are tracked on a weekly basis through a dedicated spreadsheet.
 For more information see [Confidential Containers V0 Plan](https://docs.google.com/spreadsheets/d/1M_MijAutym4hMg8KtIye1jIDAUMUWsFCri9nq4dqGvA/edit#gid=0&fvid=1397558749).
 
 
-# Mid-Term Roadmap
+## Mid-Term Roadmap
 
 Continue our journey using knowledge and support of Subject Matter Experts (SME's) in other 
 projects to form stronger opinions on what is needed from components which can be integrated to
@@ -61,7 +61,7 @@ deliver the confidential containers objectives.
 - Identify technical convergence points with other confidential computing projects both inside 
   and outside CNCF.
 
-# Longer-Term Roadmap
+## Longer-Term Roadmap
 
 Focused meetings will be set up to discuss architecture and the priority of longer-term objectives 
 in the process of being set up.
