@@ -1,4 +1,3 @@
-
 .. figure:: images/coco_logo.png
 
 Welcome to Confidential Containers' Documentation!
@@ -18,6 +17,8 @@ Welcome to Confidential Containers' Documentation!
     Contributing <CONTRIBUTING>
     Guides <guides/index>
     Release Notes <releases/index>
+    Repos <repos/index>
+
 
 
 Indices and tables

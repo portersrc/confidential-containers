@@ -29,8 +29,20 @@ author = 'confidential-containers-authors'
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
-    "myst_parser"
+    "myst_parser",
+    "sphinx.ext.intersphinx",
 ]
+
+intersphinx_mapping = {
+    #"operator": ("../../../../operator/docs/_build/html",
+    #             "../../operator/docs/_build/html/objects.inv"),
+    #"guest-components": ("../../../../guest-components/docs/_build/html",
+    #                     "../../guest-components/docs/_build/html/objects.inv"),
+    "operator": ("repos/operator",
+                 "../../operator/docs/_build/html/objects.inv"),
+    "guest-components": ("repos/guest-components",
+                         "../../guest-components/docs/_build/html/objects.inv"),
+}
 
 myst_heading_anchors = 4
 
