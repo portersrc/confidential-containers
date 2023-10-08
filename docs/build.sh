@@ -9,8 +9,8 @@ ln -s ../../../../../guest-components/docs/_build/html guest-components
 popd
 
 pushd _build/html
-mkdir -p apis
-pushd apis
-ln -s ../../../../../guest-components/target/doc/image_rs/index.html
+mkdir -p apis/image_rs
+pushd apis/image_rs
+ln -s ../../../../../../guest-components/target/doc/image_rs/index.html
 popd
 popd
