@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contributor Guide &mdash; Confidential Containers  documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Guides" href="guides/index.html" />
+    <link rel="prev" title="Confidential Containers Code of Conduct" href="CODE_OF_CONDUCT.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Confidential Containers
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="architecture.html">Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="roadmap.html">Roadmap</a></li>
+<li class="toctree-l1"><a class="reference internal" href="alignment.html">Alignment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="CODE_OF_CONDUCT.html">Code of Conduct</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Contributing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#connecting-with-the-community">Connecting with the Community</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#slack-channel">Slack Channel</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#community-meeting">Community Meeting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#github-issue">GitHub Issue</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#making-contributions">Making Contributions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#making-a-pull-request">Making a Pull Request</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#certificate-of-origin">Certificate of Origin</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#coding-style">Coding Style</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#commit-format">Commit Format</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pull-request-format">Pull Request Format</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#reviews">Reviews</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#continuous-integration">Continuous Integration</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="guides/index.html">Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="releases/index.html">Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="repos/index.html">Repos</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Confidential Containers</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Contributor Guide</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/CONTRIBUTING.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="contributor-guide">
+<h1>Contributor Guide<a class="headerlink" href="#contributor-guide" title="Link to this heading"></a></h1>
+<p>So you want to contribute to Confidential Containers?
+This guide will get you up to speed on the mechanics of the project
+and offer tips about how to work with the community and make great
+contributions.</p>
+<p>First off, Confidential Containers (CoCo) is an open source project.
+You probably already knew that, but it’s good to be clear
+that we welcome contributions, involvement, and insight from everyone.
+Just make sure to follow the <a class="reference internal" href="CODE_OF_CONDUCT.html"><span class="std std-doc">code of conduct</span></a>.</p>
+<p>CoCo is licensed with <a class="reference external" href="https://www.apache.org/licenses/LICENSE-2.0">Apache License, Version 2.0</a>.</p>
+<p>This guide won’t cover the architecture of the project, but you’ll notice
+that there are many different repositories under the <a class="reference external" href="https://github.com/confidential-containers">CoCo
+organization</a>.
+A CoCo deployment integrates many different components.
+Fortunately the process for contributing to each of these subprojects
+is largely the same.
+There is one major exception. Most CoCo deployments leverage <a class="reference external" href="https://github.com/kata-containers">Kata Containers</a>,
+which is an existing open source project. Kata has its own <a class="reference external" href="https://github.com/kata-containers/community/blob/main/CONTRIBUTING.md">Contributor Guide</a>
+that you should take a look at.
+You can contribute to CoCo by contributing to Kata, but this guide is focused on
+contributions made to repositories in the CoCo organization.</p>
+<section id="connecting-with-the-community">
+<h2>Connecting with the Community<a class="headerlink" href="#connecting-with-the-community" title="Link to this heading"></a></h2>
+<p>You might already know exactly what you want to contribute and how.
+If not, if would be useful to interact with existing developers.
+There are several easy ways to do this.</p>
+<section id="slack-channel">
+<h3>Slack Channel<a class="headerlink" href="#slack-channel" title="Link to this heading"></a></h3>
+<p>The best place to interact with the CoCo community is the
+<code class="docutils literal notranslate"><span class="pre">#confidential-containers</span></code> channel in the <a class="reference external" href="https://slack.cncf.io/">CNCF Slack workspace</a>.
+This is a great place to ask any questions about the project
+and to float ideas for future development.</p>
+</section>
+<section id="community-meeting">
+<h3>Community Meeting<a class="headerlink" href="#community-meeting" title="Link to this heading"></a></h3>
+<p>CoCo also has a weekly community meeting on Thursdays.
+See <a class="reference external" href="https://docs.google.com/document/d/1E3GLCzNgrcigUlgWAZYlgqNTdVwiMwCRTJ0QnJhLZGA/">the agenda</a>
+for more information.
+The community meeting usually has a packed agenda, but there is always time
+for a few basic questions.</p>
+</section>
+<section id="github-issue">
+<h3>GitHub Issue<a class="headerlink" href="#github-issue" title="Link to this heading"></a></h3>
+<p>You can also open issues in GitHub.
+Try to open your issue on the repository that is most closely related
+to your question.
+If you aren’t sure which repository is most relevant, you can open an issue
+on this repository.
+If you’re creating an issue that you plan to resolve, consider noting this in
+a comment so other developers know that someone is working on the problem.</p>
+</section>
+</section>
+<section id="making-contributions">
+<h2>Making Contributions<a class="headerlink" href="#making-contributions" title="Link to this heading"></a></h2>
+<p>The mechanics of making a contribution are straightforward.
+We follow a typical <a class="reference external" href="https://guides.github.com/introduction/flow/">GitHub contribution flow</a>.
+All contributions should be made as GitHub pull requests.
+Make sure your PR includes a Developer Certificate of Origin (DCO)
+and follow any existing stylistic or organizational conventions.
+These requirements are explained in more detail below.</p>
+<p>Some contributions are simpler than others.
+If you are new to the community it could be good to start with
+a few simple contributions to get used to the process.
+Larger contributions, especially ones that span multiple subprojects,
+or have implications on the trust model or project architecture,
+will usually require more discussion and review.
+Nonetheless, CoCo has a track record of <a class="reference external" href="https://confidentialcontainers.devstats.cncf.io/d/10/pr-time-to-engagement">responding to PRs quickly</a>
+and <a class="reference external" href="https://confidentialcontainers.devstats.cncf.io/d/16/opened-to-merged">merging PRs quickly</a>.</p>
+<p>If you are preparing a large contribution, it is wise to share your idea
+with the community as early as possible. Consider making an <code class="docutils literal notranslate"><span class="pre">RFC</span></code> issue
+that explains the changes. You might also try to break large contributions
+into smaller steps.</p>
+<section id="making-a-pull-request">
+<h3>Making a Pull Request<a class="headerlink" href="#making-a-pull-request" title="Link to this heading"></a></h3>
+<p>If you aren’t familiar with Git or the GitHub PR workflow, take a look at <a class="reference external" href="https://github.com/kata-containers/community/blob/main/CONTRIBUTING.md#github-workflow">this section</a>
+of the Kata Containers contributor guide.
+We have a few firm formatting requirements that you must follow,
+but in general if you are thoughtful about your work and responsive to review,
+you shouldn’t have any issues getting your PRs merged.
+The requirements that we do have are there to make everyone’s life a little easier.
+Don’t worry if you forget to follow one of them at first.
+You can always update your PR if necessary.
+If you have any ideas for how we can improve our processes,
+please suggest them to the community or make PR to this document.</p>
+<section id="certificate-of-origin">
+<h4>Certificate of Origin<a class="headerlink" href="#certificate-of-origin" title="Link to this heading"></a></h4>
+<p>Every PR in every subproject is required to include a DCO.
+This is strictly enforced by the CI.
+Fortunately, it’s easy to comply with this requirement.
+At the end of the commit message for each of your commits add something like</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Signed</span><span class="o">-</span><span class="n">off</span><span class="o">-</span><span class="n">by</span><span class="p">:</span> <span class="n">Alex</span> <span class="n">Ample</span> <span class="o">&lt;</span><span class="n">al</span><span class="nd">@example</span><span class="o">.</span><span class="n">com</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>You can add additional tags to credit other developers who worked on a commit
+or helped with it.
+See <a class="reference external" href="https://ltsi.linuxfoundation.org/software/signed-off-process/">here</a>
+for more information.</p>
+</section>
+<section id="coding-style">
+<h4>Coding Style<a class="headerlink" href="#coding-style" title="Link to this heading"></a></h4>
+<p>Please follow whatever stylistic and organizational conventions have been
+established in the subproject that you are contributing to.</p>
+<p>Most CoCo subprojects use Rust. When using Rust, it is a good idea to run <code class="docutils literal notranslate"><span class="pre">rustfmt</span></code> and <code class="docutils literal notranslate"><span class="pre">clippy</span></code>
+before submitting a PR.
+Most subprojects will automatically run these tools via a workflow,
+but you can also run the tools locally.
+In most cases your code will not be accepted if it does not pass these tests.
+Projects might have additional conventions that are not captured by these tools.</p>
+<ul class="simple">
+<li><p>Use <code class="docutils literal notranslate"><span class="pre">rustfmt</span></code> to fix any mechanical style issues. Rustfmt uses a style which conforms to the
+<a class="reference external" href="https://doc.rust-lang.org/nightly/style-guide/">Rust Style Guide</a>.</p></li>
+<li><p>Use <code class="docutils literal notranslate"><span class="pre">clippy</span></code> to catch common mistakes and improve your Rust code.</p></li>
+</ul>
+<p>You can install the above tools as follows.</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>rustup<span class="w"> </span>component<span class="w"> </span>add<span class="w"> </span>rustfmt<span class="w"> </span>clippy
+</pre></div>
+</div>
+</section>
+<section id="commit-format">
+<h4>Commit Format<a class="headerlink" href="#commit-format" title="Link to this heading"></a></h4>
+<p>Along with code your contribution will include commit messages.</p>
+<p>As mentioned, commit messages are required to have a <code class="docutils literal notranslate"><span class="pre">Signed-off-by</span></code> footer.
+Commit messages should not be empty.
+Even if the commit is self-explanatory to you, include a short description of
+what it does.
+This helps reviewers and future developers.</p>
+<p>The title of the commit should start with a subsystem. For example,</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">docs</span><span class="p">:</span> <span class="n">update</span> <span class="n">contributor</span> <span class="n">guide</span>
+</pre></div>
+</div>
+<p>The “subsystem” describes the area of the code that the change applies to.
+It does not have to match a particular directory name in the source tree
+because it is a “hint” to the reader. The subsystem is generally a single
+word.</p>
+<p>If the commit touches many different subsystems, you might want to
+split it into multiple commits.
+In general more smaller commits are preferred to fewer larger ones.</p>
+<p>If a commit fixes an existing GitHub issue, include <code class="docutils literal notranslate"><span class="pre">Fixes:</span> <span class="pre">#xxx</span></code> in the commit message.
+This will help GitHub link the commit to the issue, which shows other developers that
+work is in progress.</p>
+</section>
+<section id="pull-request-format">
+<h4>Pull Request Format<a class="headerlink" href="#pull-request-format" title="Link to this heading"></a></h4>
+<p>The pull request itself must also have a name and a description.
+Like a commit, the pull request name should start with a subsystem.
+Unlike a commit, the pull request description does not become part of
+the Git log.
+The PR description can be more verbose. You might include a checklist of development steps
+or questions that you would like reviewers to consider.
+You can tag particular users or link a PR to an issue or another PR.
+If your PR depends on other PRs, you should specify this in the description.
+In general, the more context you provide in the description, the easier it will be for reviewers.</p>
+</section>
+</section>
+<section id="reviews">
+<h3>Reviews<a class="headerlink" href="#reviews" title="Link to this heading"></a></h3>
+<p>In most subprojects your PR must be approved by two maintainers before it is merged.
+Reviews are also welcome from non-maintainers.
+For information about community structure, including how to become a maintainer,
+please see the <a class="reference external" href="https://github.com/confidential-containers/confidential-containers/blob/main/governance.md">governance document</a>.</p>
+<p>It may take a few iterations to address concerns raised by maintainers and other reviewers.
+Keep an eye on GitHub to see if you need to rebase your PR during this process.
+The web UI will report whether a PR can be automatically merged or if it conflicts
+with the base branch.</p>
+<p>While CoCo reviewers tend to be responsive, many have a lot on their plate.
+If your PR is awaiting review, you can tag a reviewer to remind them to take a look.
+You can also ask for review in the CoCo Slack channel.</p>
+</section>
+<section id="continuous-integration">
+<h3>Continuous Integration<a class="headerlink" href="#continuous-integration" title="Link to this heading"></a></h3>
+<p>All subprojects have some form of CI and require some checks to
+pass before a PR can be merged.
+Some of the checks are:</p>
+<ul class="simple">
+<li><p>Static analysis checks.</p></li>
+<li><p>Unit tests.</p></li>
+<li><p>Functional tests.</p></li>
+<li><p>Integration tests.</p></li>
+</ul>
+<p>If your PR does not pass a check, try to find the cause of the failure.
+If the cause is not related to your changes, you can ask a reviewer to re-run
+the tests or help troubleshoot.</p>
+<p>With this guide, you’re well-prepared to contribute effectively to Confidential Containers. We appreciate your involvement in our open-source community!</p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="CODE_OF_CONDUCT.html" class="btn btn-neutral float-left" title="Confidential Containers Code of Conduct" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="guides/index.html" class="btn btn-neutral float-right" title="Guides" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, confidential-containers-authors.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

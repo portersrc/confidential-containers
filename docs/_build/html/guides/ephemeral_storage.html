@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Trusted Ephemeral Storage for container images &mdash; Confidential Containers  documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Encrypted Container Images without Hardware Support" href="nontee_demo.html" />
+    <link rel="prev" title="Enclave-CC" href="enclave-cc.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Confidential Containers
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../architecture.html">Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../roadmap.html">Roadmap</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../alignment.html">Alignment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../CODE_OF_CONDUCT.html">Code of Conduct</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../CONTRIBUTING.html">Contributing</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Guides</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="eaa_verdictd.html">EAA Verdictd Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="enclave-cc.html">Enclave-CC</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Trusted Ephemeral Storage for container images</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nontee_demo.html">Encrypted Container Images without Hardware Support</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sev.html">SEV-ES Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="troubleshooting.html">Troubleshooting</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../releases/index.html">Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../repos/index.html">Repos</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Confidential Containers</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Guides</a></li>
+      <li class="breadcrumb-item active">Trusted Ephemeral Storage for container images</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/guides/ephemeral_storage.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="trusted-ephemeral-storage-for-container-images">
+<h1>Trusted Ephemeral Storage for container images<a class="headerlink" href="#trusted-ephemeral-storage-for-container-images" title="Link to this heading"></a></h1>
+<p>With CoCo, container images are pulled inside the guest VM.
+By default container images are saved in guest memory which is protected by CC hardware.
+Since memory is an expensive resource, CoCo implemented <a class="reference external" href="https://github.com/confidential-containers/documentation/issues/39">trusted ephemeral storage</a> for container image and RW layer.</p>
+<p>This solution is verified with Kubernetes CSI driver <a class="reference external" href="https://github.com/alibaba/open-local">open-local</a>. Please follow this <a class="reference external" href="https://github.com/alibaba/open-local/blob/main/docs/user-guide/user-guide.md">user guide</a> to install open-local.</p>
+<p>We can use following example <code class="docutils literal notranslate"><span class="pre">trusted_store_cc.yaml</span></code> to have a try:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Pod</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">trusted-lvm-block</span>
+<span class="nt">spec</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">runtimeClassName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">kata-qemu-tdx</span>
+<span class="w">  </span><span class="nt">containers</span><span class="p">:</span>
+<span class="w">   </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sidecar-trusted-store</span>
+<span class="w">     </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pause</span>
+<span class="w">     </span><span class="nt">volumeDevices</span><span class="p">:</span>
+<span class="w">     </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">devicePath</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;/dev/trusted_store&quot;</span>
+<span class="w">       </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">trusted-store</span>
+<span class="w">   </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">application</span>
+<span class="w">     </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">busybox</span>
+<span class="w">     </span><span class="nt">command</span><span class="p">:</span>
+<span class="w">     </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sh</span>
+<span class="w">     </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;-c&quot;</span>
+<span class="w">     </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">         </span><span class="no">sleep 10000</span>
+<span class="w">  </span><span class="nt">volumes</span><span class="p">:</span>
+<span class="w">   </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">trusted-store</span>
+<span class="w">     </span><span class="nt">persistentVolumeClaim</span><span class="p">:</span>
+<span class="w">       </span><span class="nt">claimName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">trusted-store-block-pvc</span>
+<span class="nn">---</span>
+<span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PersistentVolumeClaim</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">trusted-store-block-pvc</span>
+<span class="nt">spec</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">volumeMode</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Block</span>
+<span class="w">  </span><span class="nt">accessModes</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ReadWriteOnce</span>
+<span class="w">  </span><span class="nt">resources</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">requests</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">storage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1Gi</span>
+<span class="w">  </span><span class="nt">storageClassName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">open-local-lvm</span>
+</pre></div>
+</div>
+<p>Before deploy the workload, we can follow this <a class="reference external" href="https://github.com/kata-containers/kata-containers/blob/CCv0/docs/how-to/how-to-build-and-test-ccv0.md">documentation</a> and use <a class="reference external" href="https://github.com/kata-containers/kata-containers/blob/CCv0/docs/how-to/ccv0.sh">ccv0.sh</a> to enable CoCo console debug(optional, check whether working as expected).</p>
+<p>Create the workload:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>trusted_store_cc.yaml
+</pre></div>
+</div>
+<p>Ensure the pod was created successfully (in running state):</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>kubectl<span class="w"> </span>get<span class="w"> </span>pods
+</pre></div>
+</div>
+<p>Output:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">NAME</span>                <span class="n">READY</span>   <span class="n">STATUS</span>    <span class="n">RESTARTS</span>   <span class="n">AGE</span>
+<span class="n">trusted</span><span class="o">-</span><span class="n">lvm</span><span class="o">-</span><span class="n">block</span>   <span class="mi">2</span><span class="o">/</span><span class="mi">2</span>     <span class="n">Running</span>   <span class="mi">0</span>          <span class="mi">31</span><span class="n">s</span>
+</pre></div>
+</div>
+<p>After we enable the debug option, we can login into the VM with <code class="docutils literal notranslate"><span class="pre">ccv0.sh</span></code> script:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>./ccv0.sh<span class="w"> </span>-d<span class="w"> </span>open_kata_shell
+</pre></div>
+</div>
+<p>Check container image is saved in encrypted storage with following commands:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>root@localhost:/#<span class="w"> </span>lsblk<span class="w"> </span>--fs
+NAME<span class="w">                             </span>FSTYPE<span class="w"> </span>LABEL<span class="w"> </span>UUID<span class="w"> </span>FSAVAIL<span class="w"> </span>FSUSE%<span class="w"> </span>MOUNTPOINT
+sda
+└─ephemeral_image_encrypted_disk<span class="w">                      </span>906M<span class="w">     </span><span class="m">0</span>%<span class="w"> </span>/run/image
+
+root@localhost:/#<span class="w"> </span>cryptsetup<span class="w"> </span>status<span class="w"> </span>ephemeral_image_encrypted_disk
+/dev/mapper/ephemeral_image_encrypted_disk<span class="w"> </span>is<span class="w"> </span>active<span class="w"> </span>and<span class="w"> </span>is<span class="w"> </span><span class="k">in</span><span class="w"> </span>use.
+<span class="w">  </span>type:<span class="w">    </span>LUKS2
+<span class="w">  </span>cipher:<span class="w">  </span>aes-xts-plain64
+<span class="w">  </span>keysize:<span class="w"> </span><span class="m">512</span><span class="w"> </span>bits
+<span class="w">  </span>key<span class="w"> </span>location:<span class="w"> </span>dm-crypt
+<span class="w">  </span>device:<span class="w">  </span>/dev/sda
+<span class="w">  </span>sector<span class="w"> </span>size:<span class="w">  </span><span class="m">4096</span>
+<span class="w">  </span>offset:<span class="w">  </span><span class="m">32768</span><span class="w"> </span>sectors
+<span class="w">  </span>size:<span class="w">    </span><span class="m">2064384</span><span class="w"> </span>sectors
+<span class="w">  </span>mode:<span class="w">    </span>read/write
+
+root@localhost:/#<span class="w"> </span>mount<span class="p">|</span>grep<span class="w"> </span>image
+/dev/mapper/ephemeral_image_encrypted_disk<span class="w"> </span>on<span class="w"> </span>/run/image<span class="w"> </span><span class="nb">type</span><span class="w"> </span>ext4<span class="w"> </span><span class="o">(</span>rw,relatime<span class="o">)</span>
+
+root@localhost:/#<span class="w"> </span>ls<span class="w"> </span>/run/image/
+layers<span class="w">  </span>lost+found<span class="w">  </span>overlay
+</pre></div>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="enclave-cc.html" class="btn btn-neutral float-left" title="Enclave-CC" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="nontee_demo.html" class="btn btn-neutral float-right" title="Encrypted Container Images without Hardware Support" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, confidential-containers-authors.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
