@@ -3,6 +3,11 @@ set -euxo pipefail
 
 rm -rf _build
 make html
-cd _build/html/repos
+pushd _build/html/repos
 ln -s ../../../../../operator/docs/_build/html operator
 ln -s ../../../../../guest-components/docs/_build/html guest-components
+popd
+
+pushd _build/html/apis
+ln -s ../../../../../guest-components/target/doc/image_rs/index.html
+popd
