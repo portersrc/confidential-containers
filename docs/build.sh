@@ -11,6 +11,6 @@ popd
 pushd _build/html
 mkdir -p apis
 pushd apis
-ln -s ../../../../../guest-components/target/doc/image_rs
+ln -s ../../../../../guest-components/target/doc guest-components
 popd
 popd
