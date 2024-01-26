@@ -20,4 +20,4 @@ establish a TEE for the guest. This provides isolation and integrity protection
 for data in use. The following diagram shows what components in a Confidential
 Containers setup are part of the TEE (outlined in a green box):
 
-![Threat model](./images/threat-model.svg)
+![Threat model](./images/coco-threat-model.png)
